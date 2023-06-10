@@ -1,6 +1,9 @@
 name: Publish Release
 
-on: push
+on:
+  push:
+    tags:
+      - v*
 
 env:
   app_name: nickel2danmaku
@@ -30,6 +33,10 @@ jobs:
         env:
           APP_NAME: ${{ env.app_name }}
           PRESET: ${{ matrix.preset }}
+        run: |
+          version=${GITHUB_REF/refs\/tags\/v/:-}
+          echo "version=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+          echo "package=${APP_NAME}-v${version}-${PRESET}.zip" >> $GITHUB_ENV
       - name: Export ${{ matrix.preset }} from Godot
         uses: robpc/godot-export-action@v4.0.2
         with:
@@ -59,6 +66,9 @@ jobs:
     needs:
       - exports
     steps:
+      - name: Set env vars
+        run: |
+          echo "version=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
       - uses: actions/download-artifact@v3
         with:
           name: build
