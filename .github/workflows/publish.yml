@@ -17,8 +17,6 @@ jobs:
             export_file: nickel2danmaku
           - preset: windows
             export_file: nickel2danmaku.exe
-          - preset: web
-            export_file: index.html
           - preset: macos
             export_file: nickel2danmaku.zip
 
